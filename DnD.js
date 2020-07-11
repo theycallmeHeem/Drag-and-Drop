@@ -7,45 +7,33 @@
 *
 *  No Copyright
 *  Version: 1.0.0
-*  Date Modified: 7
+*  Date Modified: 7/10/20
 **********************************************************************************/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Global Variables
 var itemLength = $(".item").length; // keeps inital length
 var objectsInCanvas=[];
+var numOfCanvasSpots = 0; // helps populate array with fridge
 // Populates an array that holds all the containers that will allow drag and drop
 var arr = [$(".freezerMove")[0],
            $(".trashMove")[0],
            $(".areaMove")[0]]
+createCanvas();
 
-var num =0; // helps populate array with frid
-for(x=0;x<400;x+=20){ // creates enough boxes for the grid 
-  for(i=0;i<400;i+=20){
-    $(".canvas").append("<div class=\"space\" id=\""+(num)+"\">  </div>")
-    arr.push($(".space")[num]); // populates container array with boxes from grid
-    num++;    
+
+function createCanvas(){
+  for(x=0;x<400;x+=20){ // creates enough boxes for the grid 
+    for(i=0;i<400;i+=20){
+      $(".canvas").append("<div class=\"space\" id=\""+(numOfCanvasSpots)+"\">  </div>")
+      arr.push($(".space")[numOfCanvasSpots]); // populates container array with boxes from grid
+      numOfCanvasSpots++; 
+    }
   }
 }
+
+
+
+
 
 var dra = dragula(arr, {
   isContainer: function (el) {
@@ -110,7 +98,7 @@ function canvasObject(identifier,locationX, locationY){
 
 
 // Deletes objects in trash
-var itemNum=1;
+var itemnumOfCanvasSpots=1;
 dra.on('drop', function(el){
   if (el.parentElement.className != 'areaMove') {
     
@@ -130,9 +118,9 @@ dra.on('drop', function(el){
       }
     }
   }else{
-    //var itemObject = new canvasObject(itemNum,(el.parentElement.id/20), (el.parentElement.id%20))
+    //var itemObject = new canvasObject(itemnumOfCanvasSpots,(el.parentElement.id/20), (el.parentElement.id%20))
     //objectsInCanvas.push(itemObject)
-    //itemNum++;
+    //itemnumOfCanvasSpots++;
 
   }
   }
