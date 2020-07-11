@@ -1,0 +1,93 @@
+h1{ text-align: center;
+position: absolute;
+left: 40%; }
+
+.freezer {
+  grid-area: freezer;
+  background-color: grey;
+  
+}
+.canvas {
+  grid-area: canvas ;
+  background-color: blue;
+   display: grid;
+  grid-template-columns: repeat(20, 5%); 
+  grid-template-rows: repeat(20, 5%);
+}
+.deadZone {
+  grid-area: deadZone;
+  background-color: green;
+  padding-top:50%;
+  text-align: center;
+ 
+}
+.trash {
+  grid-area: trash;
+  background-color: yellow;
+}
+
+.area{
+  grid-area: area;
+  background-color: purple;
+}
+
+body {
+  width: 1000px;
+  display: grid;
+  grid-template-columns: 10%  10% 15% 35% 15%;
+  grid-template-rows: 100px 150px 150px 150px ;
+  column-gap: 1.5%;
+  grid-template-areas: 
+    ". . . . ."
+    ". freezer deadZone canvas ."
+    ". . deadZone canvas area"
+    ". trash deadZone canvas ."    ;
+    border: solid 1px;
+}
+
+.item{
+  height:40px;
+  width:100%;
+
+
+  
+}
+
+.space{
+  background-color:silver;
+  
+  border: solid 1px;
+}
+.freezerMove, .areaMove, .trashMove{
+  display: block;
+  height: 50%;
+  overflow-y: auto;
+
+}
+
+.trashMove{
+  overflow-y: hidden;
+}
+
+.gu-mirror {
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 0.8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=60);
+}
+.gu-hide {
+  display: none !important;
+}
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+.gu-transit {
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
+}
