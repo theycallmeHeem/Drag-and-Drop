@@ -11,6 +11,7 @@
 **********************************************************************************/
 
 // Global Variables
+var ORIGINAL_ITEMS = [$(".item")[0],$(".item")[1],$(".item")[2]]
 var itemLength = $(".item").length; // keeps inital length
 var objectsInCanvas=[];
 var numOfCanvasSpots = 0; // helps populate array with fridge
@@ -18,21 +19,13 @@ var numOfCanvasSpots = 0; // helps populate array with fridge
 var arr = [$(".freezerMove")[0],
            $(".trashMove")[0],
            $(".areaMove")[0]]
+
 createCanvas();
 
+controlMovment();
 
-function createCanvas(){
-  for(x=0;x<400;x+=20){ // creates enough boxes for the grid 
-    for(i=0;i<400;i+=20){
-      $(".canvas").append("<div class=\"space\" id=\""+(numOfCanvasSpots)+"\">  </div>")
-      arr.push($(".space")[numOfCanvasSpots]); // populates container array with boxes from grid
-      numOfCanvasSpots++; 
-    }
-  }
-}
-
-
-
+//Makes cursor for items the pointer
+for(i = 0; i < itemLength;i++){$(".item")[i].style.cursor = "pointer";}
 
 
 var dra = dragula(arr, {
@@ -61,69 +54,125 @@ var dra = dragula(arr, {
 
 });
 
-// makes sure that 1 finger touch wont move the screen in the canvas
-  $(".canvas")[0].addEventListener('touchmove', function(e) {
-        // screen wont move with one touch
-          if (e.touches.length==1){
-            e.preventDefault();
-          }
-  }, false);
-// makes sure that 1 finger touch wont move the screen in any of the first 3 containers
-for (var i = 0; i < itemLength; i++) {
-  
-  arr[i].addEventListener('touchmove', function(e) {
-        
-          if (e.touches.length==1){
-            e.preventDefault();
-          }else{
-            
-          }
-  
-  }, false);
 
-}
-//Makes cursor for items the pointer
-for(i=0;i<2;i++){
 
-  $(".item")[i].style.cursor = "pointer";
-}
 
-function canvasObject(identifier,locationX, locationY){
+
+
+function canvasObject(identifier, text, location){
   this.id = identifier;
-  this.locationX = locationX;
-  this.locationY = locationY;
+  this.text = text;
+  this.location = location;
+  this.locationX = parseInt(location/20);
+  this.locationY = location%20;
 
 }
 
 
 
 // Deletes objects in trash
-var itemnumOfCanvasSpots=1;
 dra.on('drop', function(el){
-  if (el.parentElement.className != 'areaMove') {
-    
-
-    el.innerText=null;
-  }
 
   if (el.parentElement.className == 'trashMove') {
     el.remove();
   }else{
-    //console.log(el.id + " " + $(".item")[0].id)
-  if (el.parentElement.className == 'areaMove') {
-    for (var i = 0; i < 3; i++) {
-     // console.log($(".item")[i].id)
-      if(el.id == $(".item")[i].id){
-        el.innerText = $(".item")[i].innerText;
+    if (el.parentElement.className=='space') {
+      var object = new canvasObject(el.id, el.innerText,el.parentElement.id)
+      el.innerText=null;
+      console.log(object)
+      objectsInCanvas.push(object)
+    }
+
+
+    if (el.parentElement.className == 'freezerMove') {
+      
+      //console.log(ORIGINAL_ITEMS)
+      for (i =0;i<ORIGINAL_ITEMS.length;i++){
+        if(ORIGINAL_ITEMS[i].id == el.id){
+          el.innerText=ORIGINAL_ITEMS[i].innerText + " "+ ($(".freezerMove .item#" +el.id).length -1);
+          break;
+        }
       }
     }
-  }else{
-    //var itemObject = new canvasObject(itemnumOfCanvasSpots,(el.parentElement.id/20), (el.parentElement.id%20))
-    //objectsInCanvas.push(itemObject)
-    //itemnumOfCanvasSpots++;
+    
+  }
+ console.log(objectsInCanvas)
+})
+
+dra.on('cancel', function(el){
+  if (el.parentElement.className=='space') {
+      var object = new canvasObject(el.id, el.innerText,el.parentElement.id)
+      el.innerText=null;
+      console.log(object)
+      objectsInCanvas.push(object)
+    }
+
+})
+
+dra.on('drag', function(el){
+  if (el.parentElement.className=='space') {
+    
+    for (i=0;i<objectsInCanvas.length;i++){
+      console.log(objectsInCanvas[i].locationX*20)
+      console.log(el.parentElement.id)
+      if (objectsInCanvas[i].location==el.parentElement.id) {
+        el.innerText=objectsInCanvas[i].text;
+        objectsInCanvas.splice(i,1)
+      }
+      
+    }
+  
+  }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function createCanvas(){
+  for(x=0;x<400;x+=20){ // creates enough boxes for the grid 
+    for(i=0;i<400;i+=20){
+      $(".canvas").append("<div class=\"space\" id=\""+(numOfCanvasSpots)+"\">  </div>")
+      arr.push($(".space")[numOfCanvasSpots]); // populates container array with boxes from grid
+      numOfCanvasSpots++; 
+    }
+  }
+}
+
+
+
+function controlMovment(){
+  // makes sure that 1 finger touch wont move the screen in the canvas
+    $(".canvas")[0].addEventListener('touchmove', function(e) {
+          // screen wont move with one touch
+            if (e.touches.length==1){
+              e.preventDefault();
+            }
+    }, false);
+  // makes sure that 1 finger touch wont move the screen in any of the first 3 containers
+  for (var i = 0; i < itemLength; i++) {
+    
+    arr[i].addEventListener('touchmove', function(e) {
+          
+            if (e.touches.length==1){
+              e.preventDefault();
+            }else{
+              
+            }
+    
+    }, false);
 
   }
-  }
-  console.log(el)
-  console.log($(".canvas .item"))
-})
+}
