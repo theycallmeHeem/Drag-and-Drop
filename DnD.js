@@ -55,74 +55,89 @@ var dra = dragula(arr, {
 });
 
 
+//   var location = document.createAttribute("data-location");
+//   location.value = -1;
 
-
-
-
-function canvasObject(identifier, text, location){
-  this.id = identifier;
-  this.text = text;
-  this.location = location;
-  this.locationX = parseInt(location/20);
-  this.locationY = location%20;
-
-}
+// for (var i = 0; i < ORIGINAL_ITEMS.length; i++) {
+//   ORIGINAL_ITEMS[i].setAttributeNode(location)
+//   console.log(ORIGINAL_ITEMS[i])
+// }
 
 
 
 // Deletes objects in trash
 dra.on('drop', function(el){
 
-  if (el.parentElement.className == 'trashMove') {
-    el.remove();
-  }else{
-    if (el.parentElement.className=='space') {
-      var object = new canvasObject(el.id, el.innerText,el.parentElement.id)
-      el.innerText=null;
-      console.log(object)
-      objectsInCanvas.push(object)
-    }
-
-
-    if (el.parentElement.className == 'freezerMove') {
-      
-      //console.log(ORIGINAL_ITEMS)
-      for (i =0;i<ORIGINAL_ITEMS.length;i++){
-        if(ORIGINAL_ITEMS[i].id == el.id){
-          el.innerText=ORIGINAL_ITEMS[i].innerText + " "+ ($(".freezerMove .item#" +el.id).length -1);
-          break;
-        }
-      }
-    }
-    
-  }
- console.log(objectsInCanvas)
-})
-
-dra.on('cancel', function(el){
-  if (el.parentElement.className=='space') {
-      var object = new canvasObject(el.id, el.innerText,el.parentElement.id)
-      el.innerText=null;
-      console.log(object)
-      objectsInCanvas.push(object)
-    }
-
-})
-
-dra.on('drag', function(el){
-  if (el.parentElement.className=='space') {
-    
-    for (i=0;i<objectsInCanvas.length;i++){
-      console.log(objectsInCanvas[i].locationX*20)
-      console.log(el.parentElement.id)
-      if (objectsInCanvas[i].location==el.parentElement.id) {
-        el.innerText=objectsInCanvas[i].text;
-        objectsInCanvas.splice(i,1)
-      }
-      
-    }
+  var location = el.getAttribute("data-location")
+  var organismNumber = el.getAttribute("data-OrganismNumber")
+  var value = el.getAttribute("data-value")
   
+
+
+  if (el.parentElement.className == 'trashMove') {
+      el.remove();
+    }else{
+      if (el.parentElement.className=='space') {
+        newLocation(el.parentElement.id)
+        el.setAttribute("data-OrganismNumber",newOrganismNumber())
+        el.innerText = null;
+      }
+
+      if (el.parentElement.className=='areaMove') {
+        el.setAttribute("data-location", -1);
+        el.innerText = el.getAttribute("data-value")
+      }
+
+      if (el.parentElement.className=='freezerMove') {
+        el.setAttribute("data-location", -1);
+        el.setAttribute("data-value", newValue())
+        el.innerText = el.getAttribute("data-value")
+
+      }
+
+
+    }
+
+
+    console.log(el)
+
+
+
+
+
+
+
+  function newLocation(NEW_LOCATION){
+    el.setAttribute("data-location",NEW_LOCATION);
+    location = el.getAttribute("data-location")
   }
+ 
+  // helps keep track of individual organism in each group Ex: shows fisrt intance of cool organism placed 
+  function newOrganismNumber(){
+    var number=0;
+
+    for(i=0;i<$(".item").length;i++){
+      if ($(".item")[i].getAttribute("data-value")==el.getAttribute("data-value")){
+        number++;
+        //console.log($(".item")[i])
+      }
+    }
+    return number-2; //subtract mirror and org in freezer
+  }
+
+ 
+  function newValue(){
+    var numOfItemInFreezer=0;
+    for(i=0;i<$(".freezerMove .item").length;i++){
+      if ($(".freezerMove .item")[i].getAttribute("data-OrganismType")==el.getAttribute("data-OrganismType")) {
+        numOfItemInFreezer++;
+      }
+    }
+    return el.getAttribute("data-value")+" "+numOfItemInFreezer
+
+    
+  }
+  
 })
 
 

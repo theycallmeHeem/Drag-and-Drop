@@ -32,41 +32,42 @@ left: 40%; }
 }
 
 body {
-  width: 1000px;
+  width: 98.5%;
   display: grid;
-  grid-template-columns: 10%  10% 15% 35% 15%;
+  grid-template-columns: 10%  10% 10% 35% 15% 20%;
   grid-template-rows: 100px 150px 150px 150px ;
   column-gap: 1.5%;
   grid-template-areas: 
-    ". . . . ."
-    ". freezer deadZone canvas ."
-    ". . deadZone canvas area"
-    ". trash deadZone canvas ."    ;
+    ". . . . . ."
+    ". freezer deadZone canvas . ."
+    ". . deadZone canvas area ."
+    ". trash deadZone canvas . ."    ;
     border: solid 1px;
 }
 
 .item{
   height:40px;
   width:100%;
-
+  border: solid 1px;
 
   
 }
 
 .space{
   background-color:silver;
-  
   border: solid 1px;
 }
 .freezerMove, .areaMove, .trashMove{
   display: block;
   height: 50%;
   overflow-y: auto;
-
+  overflow-x: hidden;
 }
 
-.trashMove{
-  overflow-y: hidden;
+.freezerMove, .areaMove{
+
+  overflow-y: scroll;
+  
 }
 
 .gu-mirror {
